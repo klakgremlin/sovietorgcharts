@@ -1,0 +1,313 @@
+---
+title: "Visualizing the Soviet Government Through the Stalinist 30s Using Interactive Org Charts"
+author: "Katherine Kingma"
+date: "2026-01-02"
+output: html_document
+---
+
+```{r pressure, echo=FALSE}
+library(visNetwork)
+```
+
+## INTRODUCTION
+
+The 1930s were  a time of intense political transformation in the Soviet Union. The USSR expanded through rapid industrialization, the nationalization of private property, and the imposition of ideological control through education and cultural campaigns. However, the 1930s were also marked by political instability, dissent, and a constantly shifting ruling class. The widespread persecution of real or imagined ideological enemies subjected citizens at virtually every level of society to demotion, exile from the Party, prison and death. 
+
+This project provides a thorough overview of how the Soviet government and the Communist Party changed during this period using interactive org charts.  These charts include: the hierarchy between the different governmental bodies and party organizations, their respective formal and informal  powers, relative size, and whether the positions were appointed or nominally elected. The charts also track  how the bodies changed over time through the tumultuous 1930s with statistics showing institutional churn and fatality from early 1930s restructuring to the Great Purges. As many bodies have very similar-sounding names, these charts also attempt to clarify nomenclature by listing the English and Russian names of the given organizations, along with acronyms and standard transliterations. 
+
+
+## A BRIEF PRIMER ON POLITICAL ORGANIZATION IN THE SOVIET UNION BEFORE THE 1930s
+
+The overall structure of the government and the Communist Party was inherited from what Lenin and the Communist Party established in the 1920s. The Communist Party was led by the Central Committee, which had different subcommittees to deal with different political issues (i.e. the Politburo, the Orgburo, and the Secretariat). 
+
+After the fall of the Tsar and the end of the Russian Civil War, the Communist Party had power over Russia, and established the Union of Soviet Socialist Republics and the Soviet government. At least in theory, the Party was separate from the government: the government (which was supposed to be composed of the proletariat) led the USSR, while the Party was a centralized “vanguard” that would protect and support the proletariat, and teach them Socialist ideals.
+
+This is not what happened in practice. The Soviet government had two main institutions: the Congress of Soviets and the Council of People’s Commissars. The Congress of Soviets, the large legislative body composed mostly of workers from around the Union, had “supreme authority” according to the government constitution, but in actuality made few important decisions. Power was really concentrated in the Council of People’s Commissars, a small executive body run by Lenin and high-level party members (A former post of mine goes over this confusing organization in simpler terms here). 
+
+In broad strokes, this overall structure was maintained in the 1930s. This is reflected in the 1936 Soviet government constitution, which looks quite similar in this regard to the Soviet government constitution from the 1920s. As such, this project is organized in three main sections for the Party, the Council of People’s Commissars, and the Supreme Soviet (the legislative body that replaced the Congress of Soviets).
+
+## THE FIRST FIVE-YEAR PLAN
+
+While the basic overall structure continued to look similar, the ramifications of policy from the 1920s primed the whole Soviet apparatus for major political change. In 1928, the Soviet government launched the First Five-Year Plan, which drove rapid industrialization and forced peasants onto collectivized farms. While the Plan brought rapid industrial progress, there were significant costs: farm collectivization brought widespread famine and death, and resistance among workers and peasants intensified political instability. The consequences of the First Five-Year Plan contributed to political change, and set the scene for the changes to come in the decade. 
+
+In the countryside (where at least 80% of the population lived), peasants were forced onto collectivized farms with the aim of increasing agricultural output. Forced grain procurement to subsidize growth in the cities, at the hands of the police and cadres, contributed to famine in the countryside across the USSR. While many peasants resisted forced grain procurement for their survival,  some participated in a campaign called dekulakization ( раскулачивание). Kulaks,  rich peasants accused of greed and sabotaging collectivized farms, could be executed or sent to labor camps.  The First Five-Year Plan resulted in approximately  five million deaths due to famine, with 20-30 thousand deaths related to dekulakization, where class enemies were executed for sabotaging the Plan. Two million accused kulaks were relocated to labor camps with dire conditions. 
+ 
+A similar tension between the Party and the people occurred  in the cities. Some factory workers viewed the harsh working conditions demanded by industrialization targets as a betrayal of what was promised: more freedom and better working conditions. In a secret police memo, there were 1,464 strikes across all industries, with a similar number the following year. Similarly as some peasants denounced kulaks, factory workers denounced “wreckers”, people who intentionally or unintentionally sabotaged factory work or industrial output. Strikes subsided in 1933, as working conditions improved. 
+
+
+## THE PARTY: From Instability and Institutional Shuffling to the Great Purge
+
+
+### Stalin and the Party Above
+
+The dynamics among high-level party officials have been the subject of much scholarly debate, especially in terms of how much authoritarian control Stalin exerted over the Politburo, the Central Committee and the government. At the beginning of the decade, Stalin’s power was fluid rather than solidified. High-level party officials still occasionally expressed their dissent from the main party line through the press, and even threatened to resign if they strongly disagreed. Stalin  acted as an arbiter between groups on any given issue, but often made the final decision. It’s important to note that factions inside the Politburo or Central Committee were not always absolute, and Stalin was not necessarily on any given “side”. As leading historian Oleg Khlevniuk argues, “archival materials… show numerous conflicts at the highest echelons of power that rose out of competing interests of the various agencies of government in which the Politburo members were involved.”  
+
+The failed execution of the First Five-Year Plan contributed to firing, institutional churn, and political exile as Stalin consolidated power.  Earlier in the decade, Stalin used the lighter tools like firing, demotion, and public apologies from officials who crossed him. For example, high-level official Smirnov was demoted from the Orgburo, but after an apology to the Central Committee was allowed to remain in the party. Bukharin was removed from the Party for several years, but was later reelected to the Central Committee. 
+
+However, Stalin’s tools of repression would get more violent as the decade continued. After a small period of moderation in 1934 at the completion of the First Five-Year Plan, Stalin launched a campaign to cleanse the country of political enemies and foreign influence. Although no particular social or political group escaped persecution, Stalin targeted mid- and high-level Party members to replace them with new leaders. Of the 139 full members and candidate members elected at the 17th Party Congress in 1934, about 70% would be killed or purged. In 1937, Stalin created a smaller committee within the Politburo to concentrate power in the hands of himself and only his closest advisors.   
+
+
+
+
+```{r echo=FALSE}
+nodes_party <- data.frame(id = c("CC", "politburo", "orgburo", "secretariat"),
+                          label = c("Central Committee", "Politburo", "Orgburo", "Secretariat"),
+                          shape = "box",
+                          title = c("Central Committee", "Политбюро", "Оргбюро", "Ceкретариат"),
+                          color = c("lightgrey", "gold", "gold", "gold"),
+                          level = c(1, 2, 2, 2)
+)
+                          
+nodes_party$title <- NA
+
+nodes_party$title[nodes_party$id == "CC"] <- paste0(
+  "<p><b> Central Committee (CC), TsK </b><br>", 
+  "Централный комитет высший партийный орган в промежутках между съездами партии ЦК ВКП(б)</p>",
+  "<p>", 
+  "Function: Main executive body of the party <br>", 
+  "Election:<br>",
+  "Size: Approximately 70 full members plus 70 cabinet members</p>",
+  "<p style='color:#435BA3;'> <b> Reprimanded, demoted or exiled in the early 30s: Zinoviev, Kamenev, Trotsky </b> </p>",
+  "<p style='color:#8B0000;'> <b> Great Purge: 98 killed Notable members: Rykov, Bukharin, Ordzhonikidze (suicide)")
+
+nodes_party$title[nodes_party$id == "politburo"] <- paste( 
+  "<p><b> Politburo </b><br>", 
+  "Политбюро",
+  "</p>",
+  "<p>", 
+  "Function: Decides big-picture questions of general policy <br>", 
+  "Election:<br>",
+  "Size: Approximately 10 members </p>", 
+  "<p style='color:#8B0000;'> <b> Purged from 'Old Guard': Rykov, Bukharin, Ordzhonidze (suicide) </p>")
+
+nodes_party$title[nodes_party$id == "orgburo"] <- paste0( 
+  "<p><b> Orgburo </b><br>", 
+  "Оргбюро",
+  "</p>",
+  "<p>", 
+  "Function: Organizes the implementation of what the Politburo desides, hiring/assigning positions  <br>", 
+  "Election: Elected by the Central Committee <br>",
+  "Size: Approximately 10 members </p>" 
+  )
+
+nodes_party$title[nodes_party$id == "secretariat"] <- paste( 
+  "<p><b> Secretariat </b><br>", 
+  "Ceкретариат",
+  "</p>",
+  "<p>", 
+  "Function: Responsible for day-to-day oversight of the party when Central Committee was not in session <br>", 
+  "Election: Elected by the Central Committee <br>",
+  "Size: Approximately 10 members </p>" 
+  )
+
+edges_party <- data.frame(from = c("CC","CC","CC"), to = c("politburo", "orgburo", "secretariat"), dashes = c(TRUE, TRUE, TRUE), color = "grey") 
+
+
+visNetwork(nodes_party, edges_party, width = "100%") %>%
+  visEdges(arrows = "to") %>%
+  visHierarchicalLayout() %>%
+  visNodes(margin = 15)
+```
+
+### The People and the Party Below 
+
+Below the All-Union Central Committee, there were central committees for each respective nation in the Union, with committees below them at the krai and oblast level. There were different committees at local levels to oversee different aspects of local life. Just as the All-Union Central Committee was run by a buro, each of these organizations had a smaller buro subcommittee to head them as well as a secretary to oversee everyday affairs.
+
+Before the beginning of the First Five-Year Plan, the Party had weak penetration into the countryside. In the mid 1920s,  the typical cell  had four to six members spread out over three or four villages (Lewin 120). While some peasants resisted collectivization and Party involvement, others were incentivized to join because of better access to education, jobs, and material resources.
+
+A public education campaign conceived by the Politburo also significantly contributed to people joining the Party or otherwise being indoctrinated into Communism.  After primary school, students could be filtered through vocational/technical schools and other forms of higher education. Adults could attend rabfraks, schools geared towards adult workers or peasants to learn general academic knowledge. Over time, some peasants trained at these schools as well as those with white-collar backgrounds would filter up to join the Party elite. 
+
+Purges and “purification” of the Party occurred in the lower Party on a somewhat continuous basis, leading to expansions and contractions in overall Party membership over time. In 1929, around 1.5 million members were investigated and 170,000 were expelled due to “careerism”, passivity, corruption, or other personal failures like public drunkenness (Getty 47). In 1933, another cleaning (чистка) took place,aimed at political enemies and lower level cadres who contributed to the rocky implementation of the First Five-Year Plan: another seventeen percent of the Party were expelled and just as many voluntarily left. Scrutiny on lower level cadres and secretaries continued during 1936, during a period that focused on the verification and consolidation of party documents. In 1937 Stalin criticized the hasty expulsion of members, but this critique came too late to reverse the tide of repression.Depending on the time, blame flowed from the highest echelons of the Party, to low-level secretaries, regular Party members and non-Party saboteurs.
+
+
+
+```{r echo=FALSE}
+nodes_party2 <- data.frame(id = c("aucc", "ncc", "cpu", "cpb", "onp", "k1", "o1", "k2", "o2", "k3", "o3"), 
+                           label = c("All-Union Central Committee", "National\nCentral Committee", "Communist Party of Ukraine\nCentral Committee", "Communist Party of Belorussia\n Central Committee", "Other National Parties...", "krai-level\norganizations", "oblast-level\norganizations", "krai-level\norganizations", "oblast-level\n organizations", "krai-level\n organizations", "oblast-level\norganizations"),
+                            shape = "box",
+                           color = "lightgrey", 
+level = c(1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3))
+
+nodes_party2$title <- NA
+
+nodes_party$title[nodes_party$id == "auuc"] <- 
+nodes_party2$title[nodes_party2$id == "onp"] <- paste0("<p><b>", "Other National Parties/Soviet Republics:","</b><br> Azerbaijan, Kazakhstan, Georgia, Moldova, Tajikistan,<br> Uzbekistan, Turkmenistan, Kyrgyzstan </br> </p><br><p> *Most of these countries were former colonies of the Russian <br> Empire, which were eventually incorporated as Soviet Republics")
+
+edges_party2 <- data.frame(from = c("aucc", "aucc", "aucc", "aucc", "ncc", "ncc", "cpu", "cpu", "cpb", "cpb"), 
+                           to = c("ncc", "cpu", "cpb", "onp", "k1", "o1", "k2","o2", "k3", "o3"))
+
+visNetwork(nodes_party2, edges_party2, width = "1200px", height = "700px") %>%
+  visEdges(arrows = "to") %>%
+  visHierarchicalLayout(
+    enabled = TRUE,
+    direction = "UD",
+    sortMethod = "directed",
+    nodeSpacing = 250,
+    levelSeparation = 200
+  ) %>%
+  visNodes(margin = 20, font = list(size = 16, multi = "html")) %>%
+  visPhysics(enabled = FALSE) %>%
+  visInteraction(dragNodes = FALSE) %>% 
+  visInteraction(navigationButtons = TRUE)
+  
+
+                           
+```
+
+
+## Council of People's Commissars
+
+While nominally separate from the Party,  in a practical sense the People’s Commissars were members of the Central Committee or other high-ranking  Party members. The Council of People’s Commissars was the main governmental organ through which the Party executed policy decisions. 
+
+```{r echo = FALSE}
+nodes_cpc <- data.frame(id = c("cpc","ccpc", "vccpc", "cspc", "cscc", "pc", "cca", "cmhe", "cbsb"),
+                        label = c("Council of\nPeople's Commissars", "Chairman of the\nSoviet Control Commission", "Chairmen of the\n Council of \nPeople's Commissars", "Vice-Chairmen of the\nCouncil of People's Commissars", "Chairman of the\n State Planning Commission", "People's Commissars", "Chairman of the\n Committee on Arts", "Chairman of the\nCommittee on\nHigher Education", "Chairman of the\n Board of the State Bank"),
+                        shape = "box",
+                        color = "lightgrey")
+
+edges_cpc <- data.frame(from = c("cpc", "cpc", "cpc", "cpc", "cpc", "cpc", "cpc", "cpc"), to = c("ccpc", "vccpc", "cspc", "cscc", "pc", "cca", "cmhe", "cbsb"), dashes = TRUE)
+
+nodes_cpc$title <- NA
+
+nodes_cpc$title[nodes_cpc$id == "cpc"] <- paste( 
+  "<p><b> Council of Peoples Commissars (Sovnarkom, SNK) </b><br>", 
+  " Совет народных комиссаров (СовНарКом)",
+  "</p>",
+  "<p>", 
+  "Function: Responsible for day-to-day oversight of the party when Central Committee was not in session <br>", 
+  " </p>" 
+  )
+
+visNetwork(nodes_cpc, edges_cpc, nodeSpacing = 100, width = "100%") %>%
+  visEdges(arrows = "to") %>%
+  visPhysics(
+    solver = "forceAtlas2Based",
+    forceAtlas2Based = list(
+      springLength = 100,
+      gravitationalConstant = -80
+    )
+  )
+                   
+```
+
+At its inception, in the 1920s, there were thirteen council members on the Council of People’s Commissars, but the Council grew in the 1930s  to manage and support both industrial and military expansion. The Council was composed of heads of important departments, along with the All-Union People’s Commissars. All-Union People’s Commissars headed offices (commissariats) devoted to things like Railways or Foreign Affairs that oversaw the whole Union. Other commissariats were on the Republic-level: each Republic had commissariats devoted to things like Meat and Dairy or State Security to oversee national-level affairs. 
+
+
+
+```{r echo = FALSE}
+nodes_aupc <- data.frame(id = c("d", "fa", "ft", "r", "ptt", "mt", "rt", "cmi", "oi", "eps", "eei", "is", "nfm", "ci", "ac", "si", "mi", "ai", "hm", "mm", "n", "as", "cei", "cap"),
+  label = c("Commissariar of\nDefense", "Commissar of\nForeign Affairs", "Commissar of\nForeign Trade", "Commissar of\nRailways", "Commissar of\nPost, Commissar of\nFTelegraph and Telephones", "Commissar of\nFMaritime Fleet", "Commissar of\nRiver Fleet", "Commissar of\nCoal-Mining Industry", "Commissar of\nOil Industry", "Commissar of\nElectric Power Stations", "Commissar of\nElectrical Engineering Industry", "Commissar of\nIron and Steel Industry", "Commissar of\nNon-Ferrous Metals Industry", "Commissar of\nChemical Industry", "Commissar of\nAircraft Industry", "Commissar of\nShipbuilding Industry","Commissar of\nMunitions Industry", "Commissar of\nArmaments Industry", "Commissar of\nHeavy-Machine Building Industry", "Commissar of\nMedium Machine-Building Industry", "Commissar of\nNavy", "Commissar of\nAgricultural Stocks", "Commissar of\nCivil Engineering Industry", "Commissar of\nCellulose and Paper Industry"),
+  shape = "box",
+  group = c("wd", "o", "o", "wd", "o", "wd", "wd", "i", "i", "i", "i", "i", "i", "i","i", "i", "i", "wd", "wd", "wd", "wd", "i", "i", "i")
+)
+
+#edges_aupc <- data.frame(from = c("cpc", "cpc", "cpc", "cpc", "cpc", "cpc", "cpc"), to = c("d", "fa", "ft", "r", "ptt", "ci", "gw"), dashes = TRUE, color = "black")#
+
+visNetwork(nodes_aupc, main = "All-Union People's Commissars", width = "100%", nodeSpacing = 15) %>%
+  visNodes(font = list(size = 75), margin = 5) %>%
+  visGroups(groupname = "wd", color = "#f4cccc") %>%
+  visGroups(groupname = "i", color = "#d9ead3") %>%
+  visGroups(groupname = "o", color = "lightgrey") %>%
+  visPhysics(
+    solver = "barnesHut",
+    barnesHut = list(
+      springLength = 50,
+      avoidOverlap = 1
+    )
+  )
+```
+
+```{r}
+nodes_npc <- data.frame(id = c("fo", "f", "md", "l", "text", "tim", "ag", "fi", "t", "ia", "ss", "just", "pb", "bm", "sc"),
+                        label = c("Commissariar of\nFood Industry", "Commissariar of\nFishing Industry", "Commissariar of\nMeat and Dairy Industry", "Commissariar of\nLight Industry", "Commissariar of\nTextile Industry", "Commissariar of\nTimber Industry", "Commissariar of\nAgriculture State Grain and Livestock", "Commissariar of\nFinance", "Commissariar of\nTrade", "Commissariar of\nInternal Affairs", "Commissariar of\nState Security", "Commissariar of\nJustice", "Commissariar of\nPublic Health", "Commissariar of\nBuild Materials Industry", "Commissariar of\nState Control"),
+                        shape = "box",
+                        color = "lightgrey")
+
+visNetwork(nodes_npc, main = "Republican Commissars", width = "100%", nodeSpacing = 15) %>%
+  visNodes(font = list(size = 75), margin = 5) %>%
+  visPhysics(
+    solver = "barnesHut",
+    barnesHut = list(
+      springLength = 50,
+      avoidOverlap = 1
+    ))
+```
+
+
+### The Police
+At the beginning of the decade, the police presence in the Soviet Union was disorganized and decentralized. Power was dispersed between two bodies, both of which were under the Council of People’s Commissars: the OGPU (the political police force) and the NKVD (the civil police force). 
+
+In 1930, the on-the-ground presence of the civil police (the NKVD) was quite weak, while the presence of the political police OGPU was strong, but disorganized. There was one civil policeman for every 3,000 citizens in the 1930, and two-thirds quit or churned out of the organization that same year due to corruption and other factor. On the other hand, local bodies like Machine-Tractor Stations were necessary to support the OGPU and enforce compliance during the First Five-Year Plan. Citizens accused of political crimes like sabotage interacted with political police when they  were prosecuted through troikas— powerful small councils of three people that evaluated cases and doled out punishment. 
+
+At times throughout the 1930s, the police were accused of being either inefficient, overzealous or corrupt in their policing. The policing apparatus was subject to purging similarly to the other political structures in the Party and government. In 1936, Ezhov replaced the former head of police Yagoda, who was purged and killed after he was accused of participating in high-level wrecking. Ezhov would be the head of the police who helped organize the Great Terror. The policing system also underwent structural changes. By 1934, OGPU personnel absorbed the NKVD as a way to streamline policing to one department, cut back on perceived overpolicing,  and reduce overcrowding in prisons. This department still kept the name NKVD. 
+
+## Supreme Soviet: "Supreme" in Spirit, Nominal in Practice
+
+The Supreme Soviet was a large bicameral legislature. According to the Soviet constitution, the Supreme Soviet was the “highest organ of State authority” , with the nominal powers to appoint Commissars as well as annual orders from the Council of People’s Commissars that were deemed not in keeping with Soviet Law. However, most historians consider the Supreme Soviet a relatively powerless organization throughout the 1930s— a symbolic body to represent the proletariat, while real decisions were made by the Party.
+
+The Supreme Soviet met only twice a year. Because the meetings were so infrequent, they had few opportunities to enact laws or curb high-level Party decisions. The idea that the proletariat were able to affect the legislative process by electing representatives to the Supreme Soviet was also a fiction. There was no choice of party or even of candidate at the poll itself. 
+
+
+```{r echo = FALSE}
+nodes_ss <- data.frame(id = c("ss", "su", "sn", "p1", "p2", "p3"),
+                       label = c("Supreme Soviet", "Soviet of the Union", "Soviet of Nationalities", "presidium", "presidium", "presidium"),
+                       shape = "box",
+                       color = c("lightgrey","lightgrey", "lightgrey", "gold", "gold", "gold"),
+                      level = c(1, 3, 3, 2, 4, 4),
+                      mass = 10
+                      )
+
+nodes_ss$title <- NA
+
+nodes_ss$title[nodes_ss$id == "ss"] <-  paste( 
+  "<p><b> Supreme Soviet </b><br>", 
+  "Верховый Совет",
+  "</p>",
+  "<p>", 
+  "Function: Passes legislation <br>", 
+  "Election: Nominally elected by members of the Union",
+  "Size: About 1,150 members total (members of the of the Soviet of the Union plus Soviet of Nationalities) </p>", 
+  " </p>")
+
+nodes_ss$title[nodes_ss$id == "su"] <-  paste( 
+  "<p><b> Soviet of the Union </b><br>", 
+  "Совет Союза",
+  "</p>",
+  "<p>", 
+  "Function: Passes legislation <br>", 
+  "Election: Nominally elected by members of the Union for four year terms",
+  "Size: Approximately 570 members (one deputy for every 300,000 members of the Union)", 
+  " </p>")
+
+nodes_ss$title[nodes_ss$id == "sn"] <-  paste( 
+  "<p><b> Soviet of Nationalities </b><br>", 
+  "Верховый Совет",
+  "</p>",
+  "<p>", 
+  "Function: Passes legislation relating to nationality<br>", 
+  "Election: Nominally elected by members of the Union",
+  "Size: Approximately 1143 members (25 members from each Union republic, 11 membersfrom each Autonomous Republic, 5 members from each Autonomous Region, and one from each national area) </p>", 
+  " </p>")
+
+nodes_ss$title[nodes_ss$id == "p1"] <-  paste( 
+  "<p><b> Presidium of the Supreme Soviet </b><br>", 
+  "Президиум Верховного Совета",
+  "</p>",
+  "<p>", 
+  "Function: Passes legislation relating to nationality<br>", 
+  "Election: Nominally elected by members of the Union",
+  "Size: Approximately 1143 members (25 members from each Union republic, 11 membersfrom each Autonomous Republic, 5 members from each Autonomous Region, and one from each national area) </p>", 
+  " </p>")
+
+edges_ss <- data.frame(from = c("ss", "ss", "ss", "su", "sn"), to = c("su", "sn", "p1", "p2", "p3"), dashes = c(TRUE, TRUE, TRUE, TRUE, TRUE))
+
+
+visNetwork(nodes_ss, edges_ss, 
+           width = "100%") %>%
+  visEdges(arrows = "to") %>%
+  visHierarchicalLayout(levelSeparation = 80,
+                        
+  nodeSpacing = 180) %>%
+  visNodes(margin = 10)
+
+```
